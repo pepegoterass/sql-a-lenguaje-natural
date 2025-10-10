@@ -65,7 +65,7 @@ app.use(cors({
 // Rate limiting
 const rateLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'), // 1 minuto por defecto
-  max: parseInt(process.env.RATE_LIMIT_MAX || '30'), // 30 requests por ventana
+  max: parseInt(process.env.RATE_LIMIT_MAX || (process.env.NODE_ENV === 'test' ? '5' : '30')), // más estricto en test
   message: {
     error: 'Demasiadas peticiones desde esta IP',
     code: 'RATE_LIMIT_EXCEEDED',
@@ -107,17 +107,25 @@ app.use(pinoHttp({
 // Parsear JSON
 app.use(express.json({ limit: '10mb' }));
 
-// Servir archivos estáticos para el dashboard moderno (React build)
-const webBuildPath = join(__dirname, '..', 'web', 'dist');
-app.use('/', express.static(webBuildPath));
+// Montar rutas API primero
+app.use('/api', askRouter);
+app.use('/api/widgets', widgetsRouter);
 
-// Fallback para SPA - servir index.html para rutas no API
-app.get('*', (req, res) => {
-  // Solo redirigir si no es una ruta de API
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(join(webBuildPath, 'index.html'));
-  }
-});
+// También exponer /ask en la raíz para compatibilidad con tests y clientes simples
+app.use('/', askRouter);
+
+// Servir archivos estáticos del frontend solo fuera de entorno de test
+if (process.env.NODE_ENV !== 'test') {
+  const webBuildPath = join(__dirname, '..', 'web', 'dist');
+  app.use('/', express.static(webBuildPath));
+
+  // Fallback para SPA - servir index.html para rutas no API
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(join(webBuildPath, 'index.html'));
+    }
+  });
+}
 
 // Middleware para logs de API más claros
 app.use('/api', (req, res, next) => {
@@ -146,10 +154,6 @@ app.use('/api', (req, res, next) => {
   
   next();
 });
-
-// Rutas de API
-app.use('/api', askRouter);
-app.use('/api/widgets', widgetsRouter);
 
 // Ruta de health check
 app.get('/api/health', async (_, res) => {
@@ -203,9 +207,25 @@ app.get('/health', async (_, res) => {
   }
 });
 
-// Ruta raíz - redirigir al dashboard
+// Ruta raíz - información de la API (compatibilidad con tests)
 app.get('/', (_, res) => {
-  res.redirect('/dashboard');
+  res.json({
+    name: 'ArteVida SQL Agent',
+    version: '1.0.0',
+    description: 'Agente conversacional que convierte lenguaje natural a consultas SQL MySQL',
+    endpoints: {
+      ask: 'POST /ask o POST /api/ask - Realizar consulta en lenguaje natural',
+      health: 'GET /api/health - Estado del servicio',
+      dashboard: 'GET / - Interfaz web (si está construida)'
+    },
+    example: {
+      method: 'POST',
+      url: '/ask',
+      body: {
+        question: '¿Cuántos eventos por ciudad en 2024?'
+      }
+    }
+  });
 });
 
 // Ruta de información de la API

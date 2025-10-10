@@ -5,7 +5,7 @@ export const AskRequestSchema = z.object({
   question: z.string()
     .min(1, 'La pregunta no puede estar vacía')
     .max(500, 'La pregunta es demasiado larga (máximo 500 caracteres)')
-    .regex(/^[^<>;"'\\{}[\]()]+$/, 'La pregunta contiene caracteres no válidos'),
+    .regex(/^[^<>\\{}[\]]+$/, 'La pregunta contiene caracteres no válidos'),
   conversationContext: z.array(z.object({
     question: z.string(),
     sql: z.string().optional(),

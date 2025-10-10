@@ -27,7 +27,7 @@ export function Chat() {
       timestamp: new Date()
     }
   ])
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState('') 
   const [loading, setLoading] = useState(false)
 
   // Obtener contexto de conversación (últimos 3 turnos completos: pregunta del usuario + respuesta con SQL)

@@ -1,128 +1,205 @@
-# ArteVida SQL Agent
+# ArteVida SQL Agent 🤖
 
-Asistente de chat-to-SQL para la base de datos "artevida_cultural" con backend Node/Express + TypeScript y frontend React/Vite. Convierte lenguaje natural a consultas MySQL seguras, ejecuta la SQL y devuelve una respuesta natural en español.
+Un agente conversacional inteligente que permite consultar bases de datos MySQL usando lenguaje natural mediante OpenAI GPT.
 
-## Índice
-- Introducción
-- Arquitectura y flujo
-- Esquema de BD (resumen)
-- Capacidades conversacionales y salvavidas del backend
-- API y contratos
-- Puesta en marcha (local y Docker)
-- Variables de entorno
-- Árbol del proyecto
-- Desarrollo (build, lint, test)
-- Solución de problemas
+## 🌟 Características Principales
 
-## Introducción
-ArteVida SQL Agent permite hacer preguntas como "conciertos de Rosalía", "precio del evento Velázquez y su Época" o "ventas por ciudad", generando SQL sobre MySQL 8 y mostrando una explicación legible.
+- **Chat con IA**: Interfaz web intuitiva para hacer preguntas en lenguaje natural
+- **OpenAI Integration**: Utiliza GPT-3.5-turbo para convertir preguntas a SQL
+- **Respuestas Naturales**: La IA explica los resultados en español fácil de entender
+- **Seguridad Avanzada**: Validación SQL, rate limiting, y protección contra inyección SQL
+- **Dashboard Web**: Interfaz moderna con estadísticas en tiempo real
+- **Base de Datos Cultural**: Esquema completo para gestión de eventos artísticos
 
-## Arquitectura y flujo
-- Web (React/Vite): interfaz de chat, muestra SQL y tabla de datos, y envía `conversationContext` (pares pregunta→SQL resultado) para mantener coherencia en seguimientos.
-- Backend (Express TS):
-  - Generación de SQL con OpenAI (gpt-4o-mini por defecto) o fallbacks locales.
-  - Guard SQL: SELECT-only, whitelist de tablas/vistas, LIMIT auto, tolera alias.
-  - Ejecuta la consulta en MySQL (mysql2) y genera respuesta natural con OpenAI (o fallback).
-  - Atajos deterministas para casos comunes (ver más abajo).
-- MySQL: esquema cultural con tablas Evento, Actividad, Artista, etc., y vistas enriquecidas.
+## 🚀 Inicio Rápido
 
-## Esquema de BD (resumen)
-Tablas:
-- Actividad(id, nombre, tipo ENUM('concierto','exposicion','teatro','conferencia'), subtipo)
-- Artista(id, nombre, biografia)
-- Actividad_Artista(actividad_id, artista_id)
-- Ubicacion(id, nombre, direccion, ciudad, aforo, precio_alquiler, caracteristicas)
-- Evento(id, nombre, actividad_id, ubicacion_id, precio_entrada, fecha_hora, descripcion)
-- Asistente(id, nombre_completo, telefono, email)
-- Entrada(id, evento_id, asistente_id, precio_pagado, fecha_compra)
-- Valoracion(id, evento_id, asistente_id, nota, comentario, fecha_valoracion)
+### 1. Configurar OpenAI API Key
 
-Vistas clave:
-- vw_eventos_enriquecidos(evento_id, evento_nombre, fecha_hora, precio_entrada, evento_descripcion, actividad_*, ubicacion_*, entradas_vendidas, facturacion, nota_media, total_valoraciones)
-- vw_ventas_evento(evento_id, evento_nombre, ciudad, fecha_hora, entradas_vendidas, facturacion)
-- vw_artistas_por_actividad(...)
-- vw_estadisticas_ciudad(...)
-
-## Capacidades conversacionales y salvavidas del backend
-- Small talk: saluda de forma neutra y evita ejecutar SQL si no hay palabras de datos. "gracias" solo intercepta si es agradecimiento puro.
-- Reutilización de contexto: si dices "precios de esos conciertos" después de "eventos de Rosalía", se copian los WHERE previos.
-- Extractor de SQL: si el modelo devuelve texto+SQL en el campo `sql`, se recorta la SELECT antes de validar.
-- Fallback heurístico: si no hay SELECT, se construye una SQL segura usando tokens (ciudad, tipo) y exclusiones de artista ("aparte de/excepto/menos/sin/que no").
-- Atajos deterministas:
-  - Precio del evento: resuelve "evento X" en `Evento.nombre` y devuelve `precio_entrada`.
-  - Descripción del evento: reutiliza la última SQL para seleccionar `descripcion`/`evento_descripcion`.
-  - Atributos del evento: precio/fecha/lugar/ciudad desde el contexto anterior sin regenerar toda la consulta.
-  - Eventos de un artista: genera JOIN obligatorio Evento→Actividad→Actividad_Artista→Artista, con filtros por tipo (concierto) y ciudad opcional.
-
-## API y contratos
-POST /api/ask
-- Request: { question: string, conversationContext?: { question, sql?, summary }[] }
-- Response: { sql: string, rows: any[], explanation: string, naturalResponse: string, executionTime: number }
-
-Validaciones SQL
-- SELECT-only
-- Whitelist de tablas/vistas: Actividad, Artista, Actividad_Artista, Ubicacion, Evento, Asistente, Entrada, Valoracion, vw_eventos_enriquecidos, vw_ventas_evento, vw_artistas_por_actividad, vw_estadisticas_ciudad
-- LIMIT 200 si falta
-
-## Puesta en marcha
-Backend
-- Node ≥ 18
-- Configura `.env` con DB y OpenAI
-- `npm install` y `npm run dev`
-
-Frontend
-- `cd web && npm install && npm run dev`
-- Visita http://localhost:5173
-
-Docker (opcional)
-- docker compose up -d
-
-## Variables de entorno
-- DB_HOST, DB_PORT, DB_NAME, DB_USER_RO, DB_PASS_RO
-- OPENAI_API_KEY, OPENAI_MODEL (por defecto gpt-4o-mini)
-- PORT (3001), NODE_ENV
-- RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS, SQL_TIMEOUT_MS, LOG_LEVEL
-
-## Árbol del proyecto
-```
-.
-├─ src/
-│  ├─ index.ts               # Bootstrap Express, middlewares, rutas
-│  ├─ ask.route.ts           # /api/ask: NL → SQL, atajos y validación
-│  ├─ widgets.route.ts       # Widgets/KPIs agregados
-│  ├─ openai.ts              # Lógica con OpenAI (SQL y respuesta natural)
-│  ├─ sqlGuard.ts            # Validador: SELECT-only, whitelist, LIMIT
-│  ├─ db.ts                  # Pool mysql2 y executeQuery
-│  ├─ llm.ts                 # Catálogo/esquema y few-shots auxiliares
-│  ├─ schema.ts              # Zod schemas de request/response
-│  ├─ logger.ts              # Config pino/pino-http
-│  └─ migrate.ts             # Utilidades de migración
-├─ seeds/
-│  └─ bd.sql                 # Esquema y datos de ArteVida Cultural
-├─ web/
-│  ├─ src/
-│  │  ├─ pages/Chat.tsx      # Chat principal (contexto de conversación)
-│  │  ├─ pages/SQL.tsx       # Consola SQL
-│  │  ├─ components/         # DataTable, SqlBlock, etc.
-│  │  └─ lib/api.ts          # Cliente /api/ask
-│  └─ ...
-├─ docker-compose.yml
-├─ Dockerfile
-├─ package.json              # Backend scripts y deps
-├─ web/package.json          # Frontend scripts y deps
-└─ README.md                 # Este documento
+```bash
+# Editar el archivo .env
+OPENAI_API_KEY=tu_api_key_de_openai_aqui
+OPENAI_MODEL=gpt-3.5-turbo
 ```
 
-## Desarrollo
-- Build backend: `npm run build`
-- Lint backend: `npm run lint`
-- Tests: `npm test`
-- Frontend: `cd web && npm run build`
+**¿Cómo obtener una API Key de OpenAI?**
+1. Ve a [OpenAI API](https://platform.openai.com/api-keys)
+2. Crea una cuenta o inicia sesión
+3. Genera una nueva API key
+4. Copia la key al archivo `.env`
 
-## Solución de problemas
-- El chat contesta social pero no consulta: revisa small talk (saludos/“gracias” sin datos). Añade palabra clave (evento, precio, ciudad, artista).
-- Error “Consulta SQL inválida: error de sintaxis”: el extractor ya intenta recortar la SELECT; si el modelo no devuelve SELECT, entra fallback heurístico.
-- “Unknown column …”: verifica que el modelo use la ruta correcta de JOIN de artista y/o usa las vistas. El validador y los atajos ya mitigan esto.
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Configurar base de datos
+
+```bash
+# Ejecutar migraciones en MySQL Workbench
+# Cargar los archivos SQL desde /migrations/
+```
+
+### 4. Iniciar servidor
+
+```bash
+npm run dev
+```
+
+### 5. Abrir dashboard
+
+Visita: `http://localhost:3001/dashboard`
+
+## 📋 Uso del Dashboard
+
+### Interfaz Principal
+- **Chat Area**: Escribe preguntas en lenguaje natural
+- **Estadísticas**: Monitoreo de consultas en tiempo real
+- **Ejemplos**: Consultas predefinidas para empezar rápidamente
+- **Estado**: Indicador de conexión a base de datos
+
+### Ejemplos de Preguntas
+
+```
+✅ "¿Cuántos eventos hay en Madrid?"
+✅ "Muéstrame los 5 artistas más populares"
+✅ "¿Qué eventos de teatro hay en diciembre?"
+✅ "¿Cuáles son los venues con mayor capacidad?"
+✅ "¿Cuánto dinero generó cada evento?"
+```
+
+### Funciones del Chat
+- **Respuestas Naturales**: La IA explica los resultados en español
+- **Ver Datos**: Expandir para ver tablas con los resultados
+- **Ver SQL**: Inspeccionar la consulta SQL generada
+- **Tiempo de Respuesta**: Monitoreo de performance
+
+## 🛠 API Endpoints
+
+### POST /api/ask
+Procesa preguntas en lenguaje natural
+
+**Request:**
+```json
+{
+  "question": "¿Cuántos eventos hay por ciudad?"
+}
+```
+
+**Response:**
+```json
+{
+  "sql": "SELECT ciudad, COUNT(*) as eventos FROM vw_eventos_por_ciudad GROUP BY ciudad",
+  "rows": [
+    {"ciudad": "Madrid", "eventos": 5},
+    {"ciudad": "Barcelona", "eventos": 3}
+  ],
+  "explanation": "Consulta SQL generada para: ¿Cuántos eventos hay por ciudad?",
+  "naturalResponse": "He encontrado eventos distribuidos en varias ciudades. Madrid tiene la mayor cantidad con 5 eventos, seguido de Barcelona con 3 eventos...",
+  "executionTime": 245
+}
+```
+
+### GET /api/health
+Estado del sistema
+
+### GET /dashboard
+Interfaz web del usuario
+
+## 🗄 Esquema de Base de Datos
+
+### Tablas Principales
+- `Evento`: Eventos culturales
+- `Actividad`: Tipos de actividades (teatro, concierto, etc.)
+- `Artista`: Información de artistas
+- `Ciudad`: Ubicaciones geográficas
+- `Venue`: Locales de eventos
+- `Usuario`: Usuarios registrados
+- `Entrada`: Tickets/entradas vendidas
+
+### Vistas Optimizadas
+- `vw_eventos_enriquecidos`: Vista completa de eventos
+- `vw_artistas_populares`: Top artistas por eventos
+- `vw_eventos_por_ciudad`: Estadísticas por ciudad
+- `vw_ingresos_por_evento`: Análisis financiero
+- `vw_ocupacion_venues`: Utilización de venues
+
+## 🔧 Configuración Avanzada
+
+### Variables de Entorno
+
+```bash
+# Base de Datos
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=artevida_cultural
+DB_USER_RO=root
+DB_PASS_RO=root
+
+# OpenAI
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-3.5-turbo  # o gpt-4
+
+# Servidor
+PORT=3001
+NODE_ENV=development
+
+# Seguridad
+RATE_LIMIT_MAX=100          # Requests por minuto
+RATE_LIMIT_WINDOW_MS=60000  # Ventana de tiempo
+SQL_TIMEOUT_MS=10000        # Timeout de consultas
+
+# Logging
+LOG_LEVEL=info
+```
+
+## 🔒 Seguridad
+
+### Características de Seguridad
+- **SQL Injection Prevention**: Validación AST con node-sql-parser
+- **Rate Limiting**: Protección contra abuso
+- **Helmet**: Headers de seguridad HTTP
+- **CORS**: Control de acceso entre dominios
+- **Input Validation**: Zod schemas para validación
+- **Table Whitelisting**: Solo tablas/vistas autorizadas
+
+### Limitaciones de Consultas
+- Solo comandos `SELECT`
+- Límite automático de 50 resultados
+- Timeout de 10 segundos por defecto
+- Tablas restringidas a esquema definido
+
+## 🚀 Producción
+
+### Deployment Checklist
+- [ ] Configurar OPENAI_API_KEY
+- [ ] Ajustar CORS para dominios de producción
+- [ ] Configurar SSL/HTTPS
+- [ ] Monitoreo y logs centralizados
+- [ ] Backup de base de datos
+- [ ] Rate limiting apropiado
+
+## 🆘 Soporte
+
+### Problemas Comunes
+
+**Error: Invalid API Key**
+- Verifica que la OPENAI_API_KEY esté configurada correctamente
+- Asegúrate de tener créditos disponibles en tu cuenta OpenAI
+
+**Error: Database Connection Failed**
+- Verifica que MySQL esté ejecutándose
+- Confirma credenciales en archivo .env
+- Asegúrate de que la base de datos `artevida_cultural` exista
+
+**Dashboard no carga**
+- Verifica que el servidor esté ejecutándose en el puerto correcto
+- Confirma que los archivos estáticos estén en `/public`
+
+## 📝 Licencia
+
+MIT License - ver archivo LICENSE para detalles.
 
 ---
-Hecho para que hablar con tu BD sea tan simple como chatear.
+
+**¡Hecho con ❤️ para simplificar el acceso a datos!**

@@ -11,7 +11,7 @@ services:
       MYSQL_USER: readonly_user
       MYSQL_PASSWORD: readonly_pass123
     ports:
-      - "3306:3306"
+      - "13306:3306" # Cambiado para evitar conflicto si ya hay MySQL local en 3306
     volumes:
       - mysql_data:/var/lib/mysql
       - ./migrations:/docker-entrypoint-initdb.d

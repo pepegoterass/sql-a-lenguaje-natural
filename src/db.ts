@@ -23,7 +23,8 @@ const logger = pino({
 // Configuración de la base de datos
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306'),
+  // Usa 13306 por defecto para coincidir con docker-compose si se ejecuta localmente
+  port: parseInt(process.env.DB_PORT || '13306'),
   database: process.env.DB_NAME || 'artevida_cultural',
   user: process.env.DB_USER_RO || 'readonly_user',
   password: process.env.DB_PASS_RO || 'readonly_pass123',
@@ -44,8 +45,9 @@ export async function executeQuery(sql: string): Promise<any[]> {
   
   try {
     logger.info({ sql }, 'Ejecutando consulta SQL');
-    
-    const [rows] = await pool.execute(sql);
+    const timeoutMs = parseInt(process.env.SQL_TIMEOUT_MS || '10000');
+    // mysql2 supports per-query timeout via query options
+    const [rows] = await pool.query({ sql, timeout: timeoutMs } as any);
     const executionTime = Date.now() - start;
     
     const rowCount = Array.isArray(rows) ? rows.length : 0;

@@ -50,7 +50,6 @@ MANEJO CRÍTICO DE CONTEXTO CONVERSACIONAL:
 - COPIA las condiciones WHERE completas del SQL anterior cuando sea relevante
 - Ejemplo: SQL anterior "WHERE ar.nombre LIKE '%Rosalía%'" + Usuario dice "precios de esos" = Usar la MISMA condición de Rosalía
 - NO hagas consultas genéricas cuando hay contexto específico
-- SOLO reutiliza filtros anteriores si hay pronombres referenciales. Si el usuario introduce un nuevo término concreto (p. ej., "Literatura del Siglo de Oro"), NO mantengas filtros de consultas previas (ciudad/artista/fecha) a menos que también los mencione.
 
 Para consultas de datos, convierte la pregunta del usuario (español) en UNA SOLA consulta SQL SEGURA.
 
@@ -65,7 +64,10 @@ REGLAS ESTRICTAS:
 - Si falta LIMIT, añade LIMIT 200 (excepto COUNT/agregaciones de una fila)
 - Fechas en formato 'YYYY-MM-DD' o 'YYYY-MM-DD HH:MM:SS'
 - MySQL puro: usa CONCAT() para concatenación, NO '||'
-- Para consultas de datos, devuelve ÚNICAMENTE la consulta SQL SIN ningún texto antes ni después. Idealmente un único bloque \`\`\`sql ... \`\`\` y nada más.
+- Para consultas de datos, devuelve ÚNICAMENTE la consulta SQL en formato:
+\`\`\`sql
+...consulta...
+\`\`\`
 
 ESQUEMA RESUMIDO:
 Tablas principales:
@@ -188,38 +190,6 @@ function sanitizeResponse(text: string): string {
     .trim();
 }
 
-// Extraer solo el SQL desde una respuesta potencialmente mezclada con texto
-function extractSqlOnly(content: string): string {
-  if (!content) return '';
-  const trimmed = content.trim();
-  // Si viene en bloque ```sql ... ```
-  const blockMatch = trimmed.match(/```sql\s*([\s\S]*?)```/i);
-  if (blockMatch && blockMatch[1]) {
-    return blockMatch[1].trim();
-  }
-  // Si hay varios bloques, tomar el primero que parezca SELECT
-  const anyBlock = trimmed.match(/```[a-z]*\s*([\s\S]*?)```/i);
-  if (anyBlock && anyBlock[1] && /\bselect\b/i.test(anyBlock[1])) {
-    return anyBlock[1].trim();
-  }
-  // Si no hay bloques, intentar extraer desde la primera aparición de SELECT hasta el final del statement (antes de explicaciones)
-  const selectIdx = trimmed.toLowerCase().indexOf('select ');
-  if (selectIdx >= 0) {
-    let sql = trimmed.slice(selectIdx).trim();
-    // Cortar explicaciones comunes añadidas después
-    const cutTokens = ['\n\n', '\nSi ', '\nEn caso', '\nNota:', '\nNOTA:', '\n--'];
-    for (const token of cutTokens) {
-      const i = sql.indexOf(token);
-      if (i > 20) { // evitar cortar demasiado pronto
-        sql = sql.slice(0, i).trim();
-        break;
-      }
-    }
-    return sql;
-  }
-  return trimmed; // último recurso
-}
-
 // Función para contar filas legible
 function humanRows(count: number): string {
   return count === 1 ? "1 fila" : `${count} filas`;
@@ -238,6 +208,12 @@ function handleSmallTalk(_question: string): OpenAIResponse {
 // Fallback SQL generation when OpenAI is not available
 function generateFallbackSQL(question: string): OpenAIResponse {
   const questionLower = question.toLowerCase();
+  // Detectar año (e.g., 2024)
+  const yearMatch = questionLower.match(/\b(20\d{2}|19\d{2})\b/);
+  const year = yearMatch ? yearMatch[1] : null;
+  // Detectar TOP N
+  const topMatch = questionLower.match(/top\s+(\d{1,3})/);
+  const topN = topMatch ? parseInt(topMatch[1], 10) : null;
   
   // Consultas sobre contenido de la base de datos
   if (questionLower.includes('datos') || questionLower.includes('contenido') || 
@@ -250,43 +226,33 @@ function generateFallbackSQL(question: string): OpenAIResponse {
   }
   
   // Simple keyword matching for basic queries
-  if (questionLower.includes('cuántos eventos') || questionLower.includes('cantidad') || questionLower.includes('count')) {
+  if (questionLower.includes('cuántos eventos') || questionLower.includes('cuantos eventos') || questionLower.includes('cantidad') || questionLower.includes('count')) {
     if (questionLower.includes('ciudad')) {
+      const whereYear = year ? ` WHERE YEAR(fecha_hora) = ${year}` : '';
       return {
-        sql: "SELECT ciudad, COUNT(*) as total_eventos FROM vw_eventos_enriquecidos GROUP BY ciudad ORDER BY total_eventos DESC LIMIT 200",
+        sql: `SELECT ciudad, COUNT(*) as total_eventos FROM vw_eventos_enriquecidos${whereYear} GROUP BY ciudad ORDER BY total_eventos DESC LIMIT 200`,
         explanation: `Consulta de conteo de eventos por ciudad generada para: "${question}"`
       };
     }
+    const whereYear2 = year ? ` WHERE YEAR(fecha_hora) = ${year}` : '';
     return {
-      sql: "SELECT COUNT(*) as total_eventos FROM Evento",
+      sql: `SELECT COUNT(*) as total_eventos FROM Evento${whereYear2}`,
       explanation: `Consulta de conteo total de eventos generada para: "${question}"`
     };
   }
   
   if (questionLower.includes('artistas') || questionLower.includes('artista')) {
     if (questionLower.includes('top') || questionLower.includes('mejores') || questionLower.includes('populares')) {
+      const limit = topN ?? 200;
+      const whereTeatro = questionLower.includes('teatro') ? " WHERE tipo = 'teatro'" : '';
       return {
-        sql: "SELECT * FROM vw_artistas_por_actividad ORDER BY artistas_count DESC LIMIT 200",
+        sql: `SELECT * FROM vw_artistas_por_actividad${whereTeatro} ORDER BY artistas_count DESC LIMIT ${limit}`,
         explanation: `Consulta de artistas populares generada para: "${question}"`
       };
     }
     return {
       sql: "SELECT * FROM Artista LIMIT 200",
       explanation: `Consulta de artistas generada para: "${question}"`
-    };
-  }
-  
-  // Literatura del Siglo de Oro / consultas similares
-  if (/(siglo\s+de\s+oro|literatura\s+del\s+siglo\s+de\s+oro|literaturas?)/i.test(question)) {
-    return {
-      sql: `SELECT e.nombre AS evento, e.precio_entrada, e.fecha_hora, u.ciudad, a.nombre AS actividad
-FROM Evento e
-JOIN Actividad a ON e.actividad_id = a.id
-JOIN Ubicacion u ON e.ubicacion_id = u.id
-WHERE a.nombre LIKE '%Siglo de Oro%' OR a.subtipo LIKE '%Siglo de Oro%'
-ORDER BY e.fecha_hora DESC
-LIMIT 200`,
-      explanation: `Consulta de eventos relacionados con la literatura del Siglo de Oro generada para: "${question}"`
     };
   }
   
@@ -308,7 +274,7 @@ LIMIT 200`,
   
   if (questionLower.includes('teatro')) {
     return {
-      sql: "SELECT * FROM vw_eventos_enriquecidos WHERE tipo = 'teatro' ORDER BY fecha_hora DESC LIMIT 200",
+      sql: `SELECT * FROM vw_eventos_enriquecidos WHERE tipo = 'teatro' ORDER BY fecha_hora DESC LIMIT ${topN ?? 200}`,
       explanation: `Consulta de eventos de teatro generada para: "${question}"`
     };
   }
@@ -337,7 +303,7 @@ LIMIT 200`,
   // Default fallback
   return {
     sql: "SELECT * FROM vw_eventos_enriquecidos ORDER BY fecha_hora DESC LIMIT 200",
-    explanation: `Consulta general de eventos generada para: "${question}" (sistema fallback - configura OpenAI para mejores resultados)`
+    explanation: `No pude interpretar específicamente tu petición, así que te muestro una consulta general sobre eventos. Pregunta por ciudad, año o tipo para afinar.`
   };
 }
 
@@ -425,8 +391,10 @@ export async function generateSQLWithOpenAI(question: string, conversationContex
       temperature: 0
     });
 
-  const raw = completion.choices[0]?.message?.content ?? '';
-  const sql = extractSqlOnly(raw);
+    const sqlResponse = completion.choices[0]?.message?.content?.trim() || '';
+    
+    // Limpiar la respuesta (remover markdown si existe)
+    const sql = sqlResponse.replace(/```sql\n?/g, '').replace(/```\n?/g, '').trim();
     
     const executionTime = Date.now() - startTime;
     
