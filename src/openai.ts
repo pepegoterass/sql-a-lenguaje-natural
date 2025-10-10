@@ -337,7 +337,7 @@ LIMIT 200`,
   // Default fallback
   return {
     sql: "SELECT * FROM vw_eventos_enriquecidos ORDER BY fecha_hora DESC LIMIT 200",
-    explanation: `Consulta general de eventos generada para: "${question}" (sistema fallback - configura OpenAI para mejores resultados)`
+    explanation: `No pude interpretar específicamente la pregunta. Muestro una consulta general de eventos para: "${question}"`
   };
 }
 

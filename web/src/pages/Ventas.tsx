@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { KpiCard } from '../components/KpiCard'
 import { DataTable } from '../components/DataTable'
 import { Euro, TrendingUp, Users, Calendar } from 'lucide-react'
+import { getKpis } from '../lib/api'
 
 interface VentaEvento {
   id: number
@@ -39,22 +40,20 @@ export function Ventas() {
   const fetchData = async () => {
     try {
       setLoading(true)
-      
       // Obtener ventas por evento y KPIs en paralelo
-      const [ventasResponse, kpisResponse] = await Promise.all([
-        fetch('http://localhost:3001/api/widgets/ventas?type=eventos&limit=15'),
-        fetch('http://localhost:3001/api/widgets/kpis')
+      const [ventasResponse, kpisData] = await Promise.all([
+        fetch('/api/widgets/ventas?type=eventos&limit=15'),
+        getKpis()
       ])
       
-      if (!ventasResponse.ok || !kpisResponse.ok) {
-        throw new Error('Error al obtener datos del servidor')
+      if (!ventasResponse.ok) {
+        throw new Error('Error al obtener datos de ventas')
       }
       
       const ventasData = await ventasResponse.json()
-      const kpisData = await kpisResponse.json()
       
       setVentas(ventasData)
-      setKpis(kpisData)
+  setKpis(kpisData)
       setError(null)
     } catch (err) {
       console.error('Error fetching ventas:', err)

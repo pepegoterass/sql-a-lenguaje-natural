@@ -65,22 +65,29 @@ Validaciones SQL
 - LIMIT 200 si falta
 
 ## Puesta en marcha
-Backend
+Backend (local)
 - Node ≥ 18
-- Configura `.env` con DB y OpenAI
+- Configura `.env` con OpenAI y conexión a la BD Dockerizada:
+  - `DB_HOST=localhost`
+  - `DB_PORT=13306`
+  - `DB_NAME=artevida_cultural`
+  - `DB_USER_RO=readonly_user`
+  - `DB_PASS_RO=readonly_pass123`
 - `npm install` y `npm run dev`
+- Si el puerto 3000 está ocupado, usa `PORT=3001`.
 
 Frontend
 - `cd web && npm install && npm run dev`
 - Visita http://localhost:5173
 
-Docker (opcional)
-- docker compose up -d
+Docker (solo base de datos)
+- `docker compose up -d db`
+- El servicio `db` expone `13306:3306` para evitar conflictos con MySQL local.
 
 ## Variables de entorno
 - DB_HOST, DB_PORT, DB_NAME, DB_USER_RO, DB_PASS_RO
 - OPENAI_API_KEY, OPENAI_MODEL (por defecto gpt-4o-mini)
-- PORT (3001), NODE_ENV
+- PORT (p.ej., 3001), NODE_ENV
 - RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS, SQL_TIMEOUT_MS, LOG_LEVEL
 
 ## Árbol del proyecto

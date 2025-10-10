@@ -1,0 +1,850 @@
+[
+  {
+    "index": 1,
+    "question": "¿Cuántos eventos hay en total?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 20
+  },
+  {
+    "index": 2,
+    "question": "Muéstrame los próximos 10 eventos ordenados por fecha.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 3
+  },
+  {
+    "index": 3,
+    "question": "¿Qué eventos hay en Madrid?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 4,
+    "question": "¿Qué conciertos hay en Madrid?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 2
+  },
+  {
+    "index": 5,
+    "question": "¿Qué obras de teatro hay en Barcelona?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 6,
+    "question": "Dime los eventos de Sevilla para este mes.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 7,
+    "question": "¿Cuál es el evento más caro?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 8,
+    "question": "¿Cuál es el evento más barato?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 9,
+    "question": "Dame el precio del evento \"Noche Flamenca\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 2
+  },
+  {
+    "index": 10,
+    "question": "¿En qué ciudad se celebra el evento \"Jazz al Anochecer\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 11,
+    "question": "¿Cuándo es el evento \"Arte Moderno 2024\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 12,
+    "question": "Dime los artistas que actúan en Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 13,
+    "question": "¿Qué eventos hay del artista \"Lola Flores\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 14,
+    "question": "¿El artista \"Lola Flores\" tiene conciertos en Sevilla?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 15,
+    "question": "Enséñame conciertos de rock.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 16,
+    "question": "Quiero ver todos los conciertos de este fin de semana.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 17,
+    "question": "Eventos de tipo exposición en Valencia.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 18,
+    "question": "¿Cuáles son los eventos programados en Bilbao?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 19,
+    "question": "Top 5 eventos por precio más alto.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 20,
+    "question": "Top 5 eventos por precio más bajo.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 21,
+    "question": "Eventos entre 20 y 40 euros.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 22,
+    "question": "Eventos con precio mayor a 50 euros.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 23,
+    "question": "Eventos con precio menor de 15 euros.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 24,
+    "question": "¿Cuántos eventos hay por ciudad?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 25,
+    "question": "Dame el total de eventos por tipo.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 26,
+    "question": "¿Cuántos conciertos hay?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 27,
+    "question": "¿Cuántas obras de teatro hay?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 28,
+    "question": "¿Cuántas exposiciones hay?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 29,
+    "question": "Eventos en Madrid ordenados por precio descendente.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 30,
+    "question": "Eventos en Barcelona ordenados por precio ascendente.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 31,
+    "question": "Dime el lugar y la ciudad del evento \"Clásicos en Vivo\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 32,
+    "question": "¿Cuál es la capacidad del lugar del evento \"Clásicos en Vivo\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 33,
+    "question": "¿Qué eventos hay en la ciudad de Málaga?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 34,
+    "question": "Eventos que no sean en Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 35,
+    "question": "Eventos en Andalucía.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 36,
+    "question": "Eventos en la Comunidad de Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 37,
+    "question": "Eventos que contengan la palabra \"jazz\" en el nombre.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 38,
+    "question": "Eventos que contengan la palabra \"flamenco\" en el nombre.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 39,
+    "question": "Muéstrame los eventos con descripción que mencione \"infantil\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 40,
+    "question": "¿Qué eventos hay esta semana?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 41,
+    "question": "¿Qué eventos hay el próximo mes?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 42,
+    "question": "Dime todos los eventos del 2024.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 43,
+    "question": "Eventos del primer trimestre de 2024.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 44,
+    "question": "Eventos del segundo trimestre de 2024.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 45,
+    "question": "Eventos del tercer trimestre de 2024.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 46,
+    "question": "Eventos del cuarto trimestre de 2024.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 47,
+    "question": "¿Cuáles son los eventos de mañana?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 48,
+    "question": "Eventos de hoy.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 49,
+    "question": "Eventos de pasado mañana.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 50,
+    "question": "Dime los eventos del fin de semana en Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 51,
+    "question": "Dime los eventos del fin de semana en Barcelona.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 52,
+    "question": "Eventos en Madrid que no sean conciertos.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 53,
+    "question": "Eventos en Sevilla que no sean teatro.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 54,
+    "question": "¿En qué ciudad hay más eventos?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 55,
+    "question": "¿En qué ciudad hay menos eventos?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 56,
+    "question": "Dime 10 eventos con su precio y ciudad.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 57,
+    "question": "Eventos con precio y fecha en Valencia.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 58,
+    "question": "¿Hay eventos gratuitos?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 59,
+    "question": "¿Cuántos artistas hay registrados?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 60,
+    "question": "Dime los artistas con más eventos.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 61,
+    "question": "Artistas que no tengan actividad de concierto.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 62,
+    "question": "¿Qué artistas participan en exposiciones?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 63,
+    "question": "¿Qué artistas participan en teatro?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 64,
+    "question": "Dime los artistas que actúan en Barcelona.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 65,
+    "question": "¿En qué eventos participa el artista \"Paco de Lucía\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 66,
+    "question": "Eventos del artista \"Paco de Lucía\" en Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 67,
+    "question": "¿Tiene más eventos el artista \"Paco de Lucía\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 68,
+    "question": "Muéstrame la descripción del evento \"Noche Flamenca\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 69,
+    "question": "¿De qué trata el evento \"Jazz al Anochecer\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 70,
+    "question": "Dime el lugar del evento \"Jazz al Anochecer\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 71,
+    "question": "Dime la ciudad del evento \"Noche Flamenca\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 72,
+    "question": "¿Cuál es el precio del evento \"Clásicos en Vivo\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 73,
+    "question": "Eventos con aforo del lugar superior a 1000.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 74,
+    "question": "Eventos en lugares con aforo menor a 300.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 75,
+    "question": "¿Cuáles son los 5 próximos eventos en Madrid?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 76,
+    "question": "Dime los 5 próximos eventos en Barcelona.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 77,
+    "question": "Top 3 eventos más caros en Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 78,
+    "question": "Top 3 eventos más baratos en Barcelona.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 79,
+    "question": "Eventos ordenados por ciudad y fecha.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 80,
+    "question": "Resumen de eventos por ciudad con totales.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 81,
+    "question": "Resumen de eventos por tipo con totales.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 82,
+    "question": "¿Cuáles son los eventos que no incluyen al artista \"Lola Flores\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 83,
+    "question": "Eventos en Madrid excepto los de \"Lola Flores\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 84,
+    "question": "Muestra conciertos en Sevilla aparte de \"Paco de Lucía\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 85,
+    "question": "¿Qué eventos hay en Valencia sin el artista \"Lola Flores\"?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 86,
+    "question": "Dime eventos en Bilbao menos los del artista \"Paco de Lucía\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 87,
+    "question": "¿Cuáles son las ciudades con mayor facturación de ventas?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 88,
+    "question": "Dime la facturación total por evento.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 89,
+    "question": "Top 5 eventos por número de entradas vendidas.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 90,
+    "question": "Total de entradas vendidas por ciudad.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 91,
+    "question": "¿Cuántas valoraciones hay por evento?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 92,
+    "question": "Top 5 eventos mejor valorados.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 93,
+    "question": "Top 5 eventos peor valorados.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 94,
+    "question": "Promedio de valoración por ciudad.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 95,
+    "question": "Eventos con valoración media mayor o igual a 4.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 96,
+    "question": "Eventos con valoración media menor a 3.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 97,
+    "question": "Correos electrónicos de asistentes de Madrid.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 2
+  },
+  {
+    "index": 98,
+    "question": "Correos electrónicos de asistentes de Barcelona.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 99,
+    "question": "Listado de asistentes del evento \"Noche Flamenca\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 100,
+    "question": "Listado de asistentes del evento \"Jazz al Anochecer\".",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 101,
+    "question": "¿Hay eventos con entradas agotadas?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 102,
+    "question": "Eventos con pocas entradas disponibles.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 103,
+    "question": "¿En qué ciudad venden más entradas?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 1
+  },
+  {
+    "index": 104,
+    "question": "¿Cuál es el evento con más ingresos?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 105,
+    "question": "¿Cuál es el evento con menos ingresos?",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  },
+  {
+    "index": 106,
+    "question": "Eventos y su número de artistas participantes.",
+    "ok": false,
+    "status": 0,
+    "error": "request to http://localhost:3000/api/chat failed, reason: ",
+    "timeMs": 0
+  }
+]
