@@ -14,11 +14,12 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "migrate": "tsx src/migrate.ts",
-    "seed": "mysql -h${DB_HOST} -P${DB_PORT} -uroot -p${DB_ROOT_PASSWORD} < seeds/bd.sql",
+    "seed": "tsx src/seed.ts",
     "run:prompts": "tsx scripts/run_prompts.ts",
     "run:test-questions": "tsx scripts/run_test_questions.ts",
     "docker:up": "docker compose up -d",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "setup": "tsx scripts/setup.ts"
   },
   "keywords": [
     "sql",
