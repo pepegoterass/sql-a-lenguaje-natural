@@ -183,6 +183,8 @@ Si prefieres hacerlo manual en desarrollo, usa el Quick start de arriba.
 - `docker:up` / `docker:down`: arranca/para MySQL 8 en Docker
 - `migrate`: ejecuta `migrations/*.sql` y crea usuario read-only (`readonly_user`)
 - `seed`: ejecuta `seeds/bd.sql` usando Node (no requiere cliente mysql de sistema)
+- `test:canonical`: ejecuta solo las pruebas canónicas NL→SQL (13 consultas)
+- `test:canonical:watch`: idem en watch mode para TDD
 - `run:prompts`: lanza las 100 preguntas de `scripts/prompts_100.txt` contra `/api/chat`
 - `run:test-questions`: smoke de preguntas frecuentes arrancando el server temporalmente
 - `setup`: orquestador opcional (Docker + migraciones + seed + build)

@@ -621,6 +621,13 @@ INSERT INTO Valoracion (id, evento_id, asistente_id, nota, comentario) VALUES
 --    Cada consulta incluye su enunciado en comentario
 -- ===================================
 
+-- ===================================
+-- 5.5) AJUSTE DE FECHAS A 2026
+-- Para mantener los eventos como futuros respecto al año actual
+-- (Desplazamos 2 años todos los eventos y sus fechas de compra)
+UPDATE Evento SET fecha_hora = DATE_ADD(fecha_hora, INTERVAL 2 YEAR);
+UPDATE Entrada SET fecha_compra = DATE_ADD(fecha_compra, INTERVAL 2 YEAR);
+
 /* 1) Eventos por tipo */
 SELECT a.tipo, COUNT(e.id) AS total_eventos
 FROM Evento e

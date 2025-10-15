@@ -10,6 +10,8 @@
     "start": "node dist/index.js",
     "test": "vitest --run",
     "test:watch": "vitest",
+  "test:canonical": "vitest --run test/artevida_queries.test.ts",
+  "test:canonical:watch": "vitest test/artevida_queries.test.ts",
     "test:100": "cross-env RUN_100_PROMPTS=true vitest --run test/chat_prompts_100.test.ts",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
