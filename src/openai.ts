@@ -419,24 +419,7 @@ ORDER BY TABLE_NAME, ORDINAL_POSITION`;
     return '';
   }
 }
-/**
-CANÓNICO (13 consultas objetivo) - cuando detectes estas intenciones, usa estos patrones:
-1) "coste de cachés por actividad": SELECT desde vw_coste_actividad (coste_total_caches, artistas_count).
-  Ej.: "gasto de cachés por actividad" -> SELECT * FROM vw_coste_actividad ORDER BY coste_total_caches DESC LIMIT 200
-2) "eventos enriquecidos"/"eventos con ventas y valoraciones": SELECT * FROM vw_eventos_enriquecidos ...
-3) "estadísticas por ciudad"/"stats por ciudad": SELECT * FROM vw_estadisticas_ciudad ORDER BY facturacion_total DESC LIMIT 200
-4) "eventos próximos"/"próximos"/"siguientes": SELECT * FROM vw_eventos_proximos ORDER BY fecha_hora ASC LIMIT 200
-5) "ciudad con más eventos": usar Evento+Ubicacion, agrupar por ciudad, ORDER DESC LIMIT 1
-6) "ciudades con solo teatro": HAVING SUM(a.tipo <> 'teatro') = 0
-7) "evento con más ceros" (nota 0): contar Valoracion.nota=0 por evento, ordenar DESC LIMIT 1
-8) "evento con mayor facturación": sumar Entrada.precio_pagado por evento (LEFT JOIN), ORDER DESC LIMIT 1
-9) "top facturación (top N eventos)": como (8) pero LIMIT N
-10) "media de valoraciones por evento": AVG(nota) y COUNT(v.id) por evento
-11) "margen estimado por evento": ingresos - (precio_alquiler + coste_total_caches), juntando vw_coste_actividad
-12) "porcentaje de ocupación (próximos)": como vw_eventos_proximos o cálculo directo COUNT(en.id)/aforo
-13) "artistas top por ingresos prorrateados": prorratear facturación por nº artistas de la actividad (CTE o subconsultas)
-RECUERDA: añade LIMIT razonable cuando devuelvas listas (p.ej. 200) y usa vistas cuando existan.
-*/
+
 
 export interface OpenAIResponse {
   sql: string;
