@@ -194,6 +194,7 @@ ALTER TABLE Artista
 -- ===================================
 -- Se autocompleta el precio_pagado si viene NULL con el precio_entrada del evento
 -- Se bloquea la venta si supera aforo de la ubicación
+DELIMITER $$
 CREATE TRIGGER bi_entrada_validaciones
 BEFORE INSERT ON Entrada
 FOR EACH ROW
@@ -221,7 +222,8 @@ BEGIN
         SET MESSAGE_TEXT = 'No se pueden vender más entradas: aforo completo.';
     END IF;
   END IF;
-END;
+END $$
+DELIMITER ;
 
 -- Vista para poder consultar de manera rápida el coste total de cachés por actividad
 CREATE OR REPLACE VIEW vw_coste_actividad AS

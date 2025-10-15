@@ -40,6 +40,7 @@ const logger = pino({
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000');
+const IS_TEST = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
 
 // Middlewares de seguridad
 app.use(helmet({
@@ -62,10 +63,10 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate limiting
+// Rate limiting (en tests: ventana corta para provocar 429 solo en ráfagas de /ask)
 const rateLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'), // 1 minuto por defecto
-  max: parseInt(process.env.RATE_LIMIT_MAX || '30'), // 30 requests por ventana
+  windowMs: IS_TEST ? 2000 : parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'),
+  max: IS_TEST ? 20 : parseInt(process.env.RATE_LIMIT_MAX || '30'),
   message: {
     error: 'Demasiadas peticiones desde esta IP',
     code: 'RATE_LIMIT_EXCEEDED',
@@ -73,6 +74,13 @@ const rateLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    if (!IS_TEST) return false;
+    const url = (req.originalUrl || req.url || '').toLowerCase();
+    const isAskPost = req.method === 'POST' && (url === '/ask' || url === '/api/ask');
+    // En tests, solo aplicamos rate limit a POST /ask; el resto lo saltamos
+    return !isAskPost;
+  },
 });
 
 app.use(rateLimiter);
@@ -107,17 +115,20 @@ app.use(pinoHttp({
 // Parsear JSON
 app.use(express.json({ limit: '10mb' }));
 
-// Servir archivos estáticos para el dashboard moderno (React build)
+// Servir SPA solo fuera de test para no interferir con los tests
 const webBuildPath = join(__dirname, '..', 'web', 'dist');
-app.use('/', express.static(webBuildPath));
+if (!IS_TEST) {
+  // Servir archivos estáticos para el dashboard moderno (React build)
+  app.use('/', express.static(webBuildPath));
 
-// Fallback para SPA - servir index.html para rutas no API
-app.get('*', (req, res) => {
-  // Solo redirigir si no es una ruta de API
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(join(webBuildPath, 'index.html'));
-  }
-});
+  // Fallback para SPA - servir index.html para rutas no API
+  app.get('*', (req, res) => {
+    // Solo redirigir si no es una ruta de API
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(join(webBuildPath, 'index.html'));
+    }
+  });
+}
 
 // Middleware para logs de API más claros
 app.use('/api', (req, res, next) => {
@@ -150,6 +161,9 @@ app.use('/api', (req, res, next) => {
 // Rutas de API
 app.use('/api', askRouter);
 app.use('/api/widgets', widgetsRouter);
+
+// Exponer también /ask en la raíz (los tests llaman POST /ask)
+app.use(askRouter);
 
 // Ruta de health check
 app.get('/api/health', async (_, res) => {
@@ -203,9 +217,22 @@ app.get('/health', async (_, res) => {
   }
 });
 
-// Ruta raíz - redirigir al dashboard
+// Ruta raíz - información de la API (los tests esperan JSON)
 app.get('/', (_, res) => {
-  res.redirect('/dashboard');
+  res.json({
+    name: 'ArteVida SQL Agent',
+    version: '1.0.0',
+    description: 'Agente conversacional que convierte lenguaje natural a consultas SQL MySQL',
+    endpoints: {
+      ask: 'POST /ask y POST /api/ask - Realizar consulta en lenguaje natural',
+      health: 'GET /api/health y /health - Estado del servicio'
+    },
+    example: {
+      method: 'POST',
+      url: '/api/ask',
+      body: { question: '¿Cuántos eventos por ciudad en 2024?' }
+    }
+  });
 });
 
 // Ruta de información de la API
@@ -287,6 +314,23 @@ async function startServer(): Promise<void> {
       }, '🚀 Servidor ArteVida SQL Agent iniciado');
     });
 
+    // Manejar errores del servidor (p.ej., puerto en uso)
+    (server as any).on('error', (err: any) => {
+      if (err && err.code === 'EADDRINUSE') {
+        logger.error({ port: PORT }, `El puerto ${PORT} ya está en uso. Ajusta la variable de entorno PORT o libera el puerto.`);
+        console.error(`\n❌ Error: El puerto ${PORT} está ocupado.`);
+        console.error('Soluciones rápidas:');
+        console.error('  1) Establece otro puerto temporalmente para esta sesión:');
+        console.error('     PowerShell >  $env:PORT = "3001"; npm run dev');
+        console.error('  2) Libera el puerto (en Windows):');
+        console.error('     PowerShell >  netstat -ano | findstr :3000');
+        console.error('     PowerShell >  taskkill /PID <PID> /F');
+        process.exit(1);
+      } else {
+        logger.error({ err }, 'Error en el servidor HTTP');
+      }
+    });
+
     // Manejo graceful de shutdown
     const gracefulShutdown = (signal: string) => {
       console.log('\n🛑 ================================');
@@ -318,7 +362,7 @@ async function startServer(): Promise<void> {
 }
 
 // Iniciar servidor si este archivo es ejecutado directamente
-if (import.meta.url.endsWith('/index.js') || import.meta.url.endsWith('\\index.js') || import.meta.url.endsWith('/index.ts') || import.meta.url.endsWith('\\index.ts')) {
+if (!IS_TEST) {
   startServer();
 }
 

@@ -1,0 +1,109 @@
+# Preguntas en lenguaje natural para el agente (100)
+# Líneas que empiezan por # son comentarios y se ignoran
+
+¿Cuántos eventos hay en total?
+Muéstrame los próximos 10 eventos ordenados por fecha.
+¿Qué eventos hay en Madrid?
+¿Qué conciertos hay en Madrid?
+¿Qué obras de teatro hay en Barcelona?
+Dime los eventos de Sevilla para este mes.
+¿Cuál es el evento más caro?
+¿Cuál es el evento más barato?
+Dame el precio del evento "Noche Flamenca".
+¿En qué ciudad se celebra el evento "Jazz al Anochecer"?
+¿Cuándo es el evento "Arte Moderno 2024"?
+Dime los artistas que actúan en Madrid.
+¿Qué eventos hay del artista "Lola Flores"?
+¿El artista "Lola Flores" tiene conciertos en Sevilla?
+Enséñame conciertos de rock.
+Quiero ver todos los conciertos de este fin de semana.
+Eventos de tipo exposición en Valencia.
+¿Cuáles son los eventos programados en Bilbao?
+Top 5 eventos por precio más alto.
+Top 5 eventos por precio más bajo.
+Eventos entre 20 y 40 euros.
+Eventos con precio mayor a 50 euros.
+Eventos con precio menor de 15 euros.
+¿Cuántos eventos hay por ciudad?
+Dame el total de eventos por tipo.
+¿Cuántos conciertos hay?
+¿Cuántas obras de teatro hay?
+¿Cuántas exposiciones hay?
+Eventos en Madrid ordenados por precio descendente.
+Eventos en Barcelona ordenados por precio ascendente.
+Dime el lugar y la ciudad del evento "Clásicos en Vivo".
+¿Cuál es la capacidad del lugar del evento "Clásicos en Vivo"?
+¿Qué eventos hay en la ciudad de Málaga?
+Eventos que no sean en Madrid.
+Eventos en Andalucía.
+Eventos en la Comunidad de Madrid.
+Eventos que contengan la palabra "jazz" en el nombre.
+Eventos que contengan la palabra "flamenco" en el nombre.
+Muéstrame los eventos con descripción que mencione "infantil".
+¿Qué eventos hay esta semana?
+¿Qué eventos hay el próximo mes?
+Dime todos los eventos del 2024.
+Eventos del primer trimestre de 2024.
+Eventos del segundo trimestre de 2024.
+Eventos del tercer trimestre de 2024.
+Eventos del cuarto trimestre de 2024.
+¿Cuáles son los eventos de mañana?
+Eventos de hoy.
+Eventos de pasado mañana.
+Dime los eventos del fin de semana en Madrid.
+Dime los eventos del fin de semana en Barcelona.
+Eventos en Madrid que no sean conciertos.
+Eventos en Sevilla que no sean teatro.
+¿En qué ciudad hay más eventos?
+¿En qué ciudad hay menos eventos?
+Dime 10 eventos con su precio y ciudad.
+Eventos con precio y fecha en Valencia.
+¿Hay eventos gratuitos?
+¿Cuántos artistas hay registrados?
+Dime los artistas con más eventos.
+Artistas que no tengan actividad de concierto.
+¿Qué artistas participan en exposiciones?
+¿Qué artistas participan en teatro?
+Dime los artistas que actúan en Barcelona.
+¿En qué eventos participa el artista "Paco de Lucía"?
+Eventos del artista "Paco de Lucía" en Madrid.
+¿Tiene más eventos el artista "Paco de Lucía"?
+Muéstrame la descripción del evento "Noche Flamenca".
+¿De qué trata el evento "Jazz al Anochecer"?
+Dime el lugar del evento "Jazz al Anochecer".
+Dime la ciudad del evento "Noche Flamenca".
+¿Cuál es el precio del evento "Clásicos en Vivo"?
+Eventos con aforo del lugar superior a 1000.
+Eventos en lugares con aforo menor a 300.
+¿Cuáles son los 5 próximos eventos en Madrid?
+Dime los 5 próximos eventos en Barcelona.
+Top 3 eventos más caros en Madrid.
+Top 3 eventos más baratos en Barcelona.
+Eventos ordenados por ciudad y fecha.
+Resumen de eventos por ciudad con totales.
+Resumen de eventos por tipo con totales.
+¿Cuáles son los eventos que no incluyen al artista "Lola Flores"?
+Eventos en Madrid excepto los de "Lola Flores".
+Muestra conciertos en Sevilla aparte de "Paco de Lucía".
+¿Qué eventos hay en Valencia sin el artista "Lola Flores"?
+Dime eventos en Bilbao menos los del artista "Paco de Lucía".
+¿Cuáles son las ciudades con mayor facturación de ventas?
+Dime la facturación total por evento.
+Top 5 eventos por número de entradas vendidas.
+Total de entradas vendidas por ciudad.
+¿Cuántas valoraciones hay por evento?
+Top 5 eventos mejor valorados.
+Top 5 eventos peor valorados.
+Promedio de valoración por ciudad.
+Eventos con valoración media mayor o igual a 4.
+Eventos con valoración media menor a 3.
+Correos electrónicos de asistentes de Madrid.
+Correos electrónicos de asistentes de Barcelona.
+Listado de asistentes del evento "Noche Flamenca".
+Listado de asistentes del evento "Jazz al Anochecer".
+¿Hay eventos con entradas agotadas?
+Eventos con pocas entradas disponibles.
+¿En qué ciudad venden más entradas?
+¿Cuál es el evento con más ingresos?
+¿Cuál es el evento con menos ingresos?
+Eventos y su número de artistas participantes.

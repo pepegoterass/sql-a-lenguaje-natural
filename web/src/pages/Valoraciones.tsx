@@ -39,7 +39,7 @@ export function Valoraciones() {
   const fetchValoraciones = async () => {
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:3001/api/widgets/valoraciones')
+      const response = await fetch('/api/widgets/valoraciones')
       
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`)

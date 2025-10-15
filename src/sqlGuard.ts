@@ -20,7 +20,8 @@ const ALLOWED_TABLES = new Set([
   'vw_ventas_evento',
   'vw_artistas_por_actividad',
   'vw_estadisticas_ciudad',
-  'vw_eventos_proximos'
+  'vw_eventos_proximos',
+  'vw_coste_actividad'
 ]);
 
 // Tipos SQL prohibidos
@@ -74,16 +75,36 @@ export function validateAndSanitizeSql(sql: string): SqlValidationResult {
     // Remover ; final si existe para el parsing
     const sqlForParsing = cleanSql.replace(/;$/, '');
 
+    // Si la consulta utiliza CTE (WITH ...), evitar AST y aceptar mediante validación ligera
+    if (/^\s*with\b/i.test(sqlForParsing)) {
+      // Comprobar que no haya operaciones prohibidas
+      const forbidden = /(insert|update|delete|create|alter|drop|truncate|rename|grant|revoke)\b/i;
+      if (forbidden.test(sqlForParsing)) {
+        return { isValid: false, error: 'Operación no permitida detectada en CTE' };
+      }
+      let sanitizedSql = sqlForParsing;
+      if (!/\blimit\b/i.test(sanitizedSql)) sanitizedSql += ' LIMIT 200';
+      logger.info({ sanitizedSql }, 'Consulta CTE validada mediante ruta ligera');
+      return { isValid: true, sanitizedSql };
+    }
+
     // Parsear la consulta
     let ast;
     try {
       ast = parser.astify(sqlForParsing, { database: 'mysql' });
     } catch (parseError) {
-      logger.warn({ sql: cleanSql, error: parseError }, 'Error parseando SQL');
-      return {
-        isValid: false,
-        error: 'Consulta SQL inválida: error de sintaxis'
-      };
+      logger.warn({ sql: cleanSql, error: parseError }, 'Error parseando SQL (intentando validación textual segura)');
+      // Fallback de validación textual segura (soporta CTEs y HAVING complejos)
+      const textOk = textBasedSafeValidation(sqlForParsing);
+      if (!textOk.ok) {
+        return { isValid: false, error: textOk.error || 'Consulta SQL inválida: error de sintaxis' };
+      }
+      // Añadir LIMIT si falta
+      let sanitizedSql = sqlForParsing;
+      if (!/\blimit\b/i.test(sanitizedSql)) {
+        sanitizedSql += ' LIMIT 200';
+      }
+      return { isValid: true, sanitizedSql };
     }
 
     // Manejar array de statements
@@ -118,41 +139,46 @@ export function validateAndSanitizeSql(sql: string): SqlValidationResult {
     
     // Verificar que todas las tablas estén en la whitelist
     // Pero ignorar alias de una sola letra (e, a, u, etc.) que son comunes en JOINs
+    let whitelistViolation = '';
     for (const table of referencedTables) {
       const tableName = table.toLowerCase();
-      
-      // Ignorar alias típicos de una sola letra o dos letras
-      if (tableName.length <= 2) {
-        continue;
-      }
-      
+      if (tableName.length <= 2) continue; // alias
       if (!ALLOWED_TABLES.has(tableName) && !ALLOWED_TABLES.has(table)) {
+        whitelistViolation = table;
+        break;
+      }
+    }
+    if (whitelistViolation) {
+      // Reintentar con validación textual que soporta WITH/CTE y subconsultas
+      const textOk = textBasedSafeValidation(sqlForParsing);
+      if (!textOk.ok) {
         return {
           isValid: false,
-          error: `Tabla '${table}' no está permitida. Tablas disponibles: ${Array.from(ALLOWED_TABLES).join(', ')}`
+          error: `Tabla '${whitelistViolation}' no está permitida. Tablas disponibles: ${Array.from(ALLOWED_TABLES).join(', ')}`
         };
       }
+      // Aceptar usando SQL original + LIMIT si falta
+      let sanitizedSql = sqlForParsing;
+      if (!/\blimit\b/i.test(sanitizedSql)) sanitizedSql += ' LIMIT 200';
+      return { isValid: true, sanitizedSql };
     }
 
-    // Verificar si ya tiene LIMIT
-    let hasLimit = false;
-    if (statement.limit) {
-      hasLimit = true;
-    }
+    // Verificar si ya tiene LIMIT a partir del AST
+    const hasLimit = !!statement.limit;
 
-    // Reconstruir la consulta y añadir LIMIT si no existe
-    let sanitizedSql = parser.sqlify(statement, { database: 'mysql' });
-    
+    // Conservar el SQL original (ya limpio) para mantener alias y estilo del usuario
+    // Remover ';' final si existe para evitar dos statements
+    let sanitizedSql = sqlForParsing;
     if (!hasLimit) {
       sanitizedSql += ' LIMIT 200';
       logger.info({ originalSql: cleanSql }, 'Añadido LIMIT 200 a la consulta');
     }
 
-    logger.info({ 
-      originalSql: cleanSql, 
+    logger.info({
+      originalSql: cleanSql,
       sanitizedSql,
       referencedTables: Array.from(referencedTables)
-    }, 'Consulta SQL validada y saneada');
+    }, 'Consulta SQL validada y saneada (preservando alias)');
 
     return {
       isValid: true,
@@ -229,4 +255,44 @@ function extractTablesFromAst(ast: any): Set<string> {
 
   traverse(ast);
   return tables;
+}
+
+// Fallback de validación textual segura: soporta CTEs y consultas complejas
+function textBasedSafeValidation(sql: string): { ok: boolean; error?: string } {
+  const s = sql.trim().replace(/;$/, '');
+  // Solo SELECT y WITH ... SELECT
+  if (!/^\s*(with\b[\s\S]*?select\b|select\b)/i.test(s)) {
+    return { ok: false, error: 'Solo se permiten consultas SELECT (soporta WITH CTE)' };
+  }
+  // Palabras peligrosas prohibidas
+  const forbidden = /(insert|update|delete|create|alter|drop|truncate|rename|grant|revoke)\b/i;
+  if (forbidden.test(s)) {
+    return { ok: false, error: 'Operación no permitida detectada' };
+  }
+  // Extraer nombres de CTE declarados en WITH
+  const cteNames = new Set<string>();
+  const withHeaderMatch = s.match(/^\s*with\s+([\s\S]+?)\bselect\b/i);
+  if (withHeaderMatch) {
+    const header = withHeaderMatch[1];
+    const cteRe = /(\w+)\s+as\s*\(/gi;
+    let cm: RegExpExecArray | null;
+    while ((cm = cteRe.exec(header)) !== null) {
+      cteNames.add((cm[1] || '').toLowerCase());
+    }
+  }
+  // Extraer posibles identificadores de tablas/vistas después de FROM/JOIN
+  const tableRegex = /(from|join)\s+([a-zA-Z0-9_\.]+)/gi;
+  let m: RegExpExecArray | null;
+  while ((m = tableRegex.exec(s)) !== null) {
+    const raw = m[2];
+    // Quitar alias tipo schema.table o backticks
+    const name = raw.replace(/`/g, '').split('.').pop() || raw;
+    const lower = name.toLowerCase();
+    if (lower.length <= 2) continue; // alias
+    if (cteNames.has(lower)) continue; // nombre de CTE permitido
+    if (!ALLOWED_TABLES.has(lower) && !ALLOWED_TABLES.has(name)) {
+      return { ok: false, error: `Tabla '${name}' no está permitida` };
+    }
+  }
+  return { ok: true };
 }

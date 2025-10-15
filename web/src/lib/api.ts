@@ -1,4 +1,7 @@
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:3001/api'
+// Prefer same-origin when app is served by the backend (Express serves web/dist on port 3000)
+// Falls back to VITE_API_BASE for standalone dev of the frontend
+const originBase = typeof window !== 'undefined' ? `${window.location.origin}/api` : undefined
+const API_BASE = (import.meta as any).env?.VITE_API_BASE || originBase || 'http://localhost:3000/api'
 const USE_MOCKS = (import.meta as any).env?.VITE_USE_MOCKS === 'true'
 
 export interface AskResponse {
