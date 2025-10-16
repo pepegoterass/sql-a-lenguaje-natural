@@ -7,21 +7,21 @@ Este documento resume el funcionamiento del sistema, el flujo de datos y cómo s
 ```mermaid
 graph TD
   subgraph Client
-    Web[React SPA (web/)]
+    Web["React SPA (web/)"]
   end
   subgraph Server
-    Express[Express App (src/index.ts)]
-    AskRoute[/ask.route.ts (POST /ask, /api/ask, /chat)/]
-    WidgetsRoute[/widgets.route.ts (GET /api/widgets/*)/]
-    OpenAI[openai.ts (LLM + fallbacks)]
-    Guard[sqlGuard.ts (SELECT-only + whitelist + LIMIT)]
-    DBLayer[db.ts (mysql2/promise pool)]
+    Express["Express App (src/index.ts)"]
+    AskRoute["ask.route.ts (POST /ask, /api/ask, /chat)"]
+    WidgetsRoute["widgets.route.ts (GET /api/widgets/*)"]
+    OpenAI["openai.ts (LLM + fallbacks)"]
+    Guard["sqlGuard.ts (SELECT-only + whitelist + LIMIT)"]
+    DBLayer["db.ts (mysql2/promise pool)"]
   end
   subgraph Data
-    MySQL[(MySQL 8)]
-    Seeds[seeds/bd.sql]
-    Mig1[migrations/001_init.sql]
-    Mig2[migrations/002_views.sql]
+    MySQL["MySQL 8"]
+    Seeds["seeds/bd.sql"]
+    Mig1["migrations/001_init.sql"]
+    Mig2["migrations/002_views.sql"]
   end
 
   Web -->|HTTP| Express
@@ -35,7 +35,7 @@ graph TD
   Seeds -->|seed.ts| MySQL
   Mig1 -->|migrate.ts| MySQL
   Mig2 -->|migrate.ts| MySQL
-  OpenAI -->|opcional| OpenAIAPI[(OpenAI API)]
+  OpenAI -->|opcional| OpenAIAPI["OpenAI API"]
 
   style OpenAIAPI fill:#FFF6BF,stroke:#F1C40F
 ```
