@@ -2,6 +2,55 @@
 
 Asistente de chat-to-SQL para la base de datos "artevida_cultural" con backend Node/Express + TypeScript y frontend React/Vite. Convierte lenguaje natural a consultas MySQL seguras, ejecuta la SQL y devuelve una respuesta natural en español.
 
+## 🧭 Clonar e inicializar (para terceros)
+
+Prerrequisitos: Node.js 18+ y Docker Desktop.
+
+1) Clona el repositorio y entra en la carpeta
+
+```powershell
+git clone https://github.com/pepegoterass/sql-a-lenguaje-natural.git
+cd sql-a-lenguaje-natural
+```
+
+2) Instala dependencias del backend
+
+```powershell
+npm install
+```
+
+3) Arranca MySQL en Docker (puerto 13306)
+
+```powershell
+npm run docker:up
+```
+
+4) Ejecuta migraciones (crea tablas, vistas y usuario read-only)
+
+```powershell
+npm run migrate
+```
+
+5) Carga datos de ejemplo (seed)
+
+```powershell
+$env:DB_HOST="localhost"; $env:DB_PORT="13306"; $env:DB_NAME="artevida_cultural"; $env:DB_ROOT_PASSWORD="rootpass123"; npm run -s seed
+```
+
+6) Inicia la API en desarrollo
+
+```powershell
+npm run dev
+```
+
+Opcional (frontend):
+
+```powershell
+cd web; npm install; npm run dev
+```
+
+Sigue el apartado "🚀 Quick start" para comandos adicionales (health check, prueba de pregunta, cambio de puerto) y consulta `docs/ARQUITECTURA.md` para ver los diagramas de la arquitectura.
+
 ## 🚀 Quick start (Windows / PowerShell)
 
 1) Arranca la base de datos en Docker (expone MySQL en 13306):
