@@ -35,7 +35,7 @@ graph TD
   Seeds -->|seed.ts| MySQL
   Mig1 -->|migrate.ts| MySQL
   Mig2 -->|migrate.ts| MySQL
-  OpenAI -->|opcional| OpenAIAPI["OpenAI API"]
+  OpenAI --> OpenAIAPI["OpenAI API"]
 
   style OpenAIAPI fill:#FFF6BF,stroke:#F1C40F
 ```
